@@ -1,0 +1,79 @@
+﻿@model WordWizApp.Models.Word
+
+
+@using WordWizApp.Models
+
+@{
+    ViewBag.Title = "Sentences";
+}
+
+<h2>Vocabulary Word: @Model.Name</h2>
+<br />
+<br />
+
+@*@using (Html.BeginForm())
+{
+    @Html.AntiForgeryToken()
+
+    <div class="form-horizontal">
+        <h3>Add New Sentence</h3>
+
+        <div class="form-group">
+            <div class="col-md-8">
+                @Html.EditorFor(m => m.Sentences[0].Name, new { htmlAttributes = new { @class = "form-control" } })
+            </div>
+        </div>
+    </div>
+    <input type="submit" formaction=@Url.Action("CreateSentence/" + Model.Id, "Sentence", new { sentence = "test harded coded" }) formmethod="post" value="Add New Sentence" class="btn btn-sm btn-success" />
+}
+
+<br />
+<br />
+<br />*@
+
+<h3>Sentences</h3>
+<table class="table table-condensed table-hover">
+    <tr>
+        <th>@Html.Label("Sentence")</th>
+        <th>@Html.LabelFor(m => m.Sentences.FirstOrDefault().IsDone)</th>
+        <th></th>
+    </tr>
+
+    @if (Model.Sentences != null)
+    {
+        foreach (var sentence in Model.Sentences)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(m => sentence.Name)
+                </td>
+                <td>
+                    @Html.DisplayFor(m => sentence.IsDone)
+                </td>
+                <td>
+                    <a type="button" class="btn btn-primary btn-sm" href="@Url.Action("Edit", "Sentence", new { sentence.Id })">
+                        <span class="glyphicon glyphicon-pencil"></span>
+                    </a>
+                    <a type="button" class="btn btn-primary btn-sm" href="@Url.Action("Delete", "Sentence", new { sentence.Id })">
+                        <span class="glyphicon glyphicon-trash"></span>
+                    </a>
+                </td>
+            </tr>
+        }
+    }
+</table>
+<br />
+<br />
+<br />
+
+<a type="button" class="btn btn-primary btn-sm" href="@Url.Action("Index")">
+    <span class="glyphicon glyphicon-backward"></span>
+    <span>Back</span>
+</a>
+
+<a type="button" class="btn btn-primary btn-sm" href="@Url.Action("Create", "Sentence")/?wordId=@Model.Id">
+    <span class="glyphicon glyphicon-plus"></span>
+    <span>Add New Sentence</span>
+</a>
+
+

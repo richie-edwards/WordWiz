@@ -1,0 +1,67 @@
+﻿@model IEnumerable<WordWizApp.Models.Word>
+@using WordWizApp.Models
+
+
+@{
+    ViewBag.Title = "Index";
+}
+
+<h2>My Study Words</h2>
+
+<br />
+<br />
+
+<table class="table table-condensed table-hover">
+    <tr>
+        <th>@Html.DisplayNameFor(m => m.Name)</th>
+        <th>@Html.DisplayNameFor(m => m.Sentences)</th>
+        <th>@Html.DisplayNameFor(m => m.CreatedDate)</th>
+        <th></th>
+
+    </tr>
+
+    @foreach (var item in Model)
+    {
+        <tr>
+            <td>
+                @Html.DisplayFor(m => item.Name)
+            </td>
+            <td>
+                @Html.ActionLink(item.Sentences.Count.ToString(), "Sentences", new { Id = item.Id })
+            </td>
+            <td>
+                @Html.DisplayFor(m => item.CreatedDate)
+            </td>
+            <td>
+                @Html.Partial("_GroupedButtonPartial",
+            new GroupedButtonPartial
+            {
+                Action = "Edit",
+                ButtonType = "btn-primary",
+                Glyph = "pencil",
+                WordId = item.Id
+            })
+                @Html.Partial("_GroupedButtonPartial",
+             new GroupedButtonPartial
+             {
+                 Action = "Delete",
+                 ButtonType = "btn-primary",
+                 Glyph = "trash",
+                 WordId = item.Id
+             })               
+
+            </td>
+        </tr>
+    }
+
+</table>
+
+@Html.Partial("_GroupedButtonPartial",
+           new GroupedButtonPartial
+           {
+               Action = "Create",
+               ButtonType = "btn-primary",
+               Glyph = "plus",
+               Text = "Add New Word"
+           })
+

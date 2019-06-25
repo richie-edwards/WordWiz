@@ -1,4 +1,6 @@
-﻿using System;
+﻿using Microsoft.AspNet.Identity;
+using Microsoft.AspNet.Identity.EntityFramework;
+using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Data.Entity;
@@ -6,18 +8,22 @@ using System.Linq;
 using System.Net;
 using System.Web;
 using System.Web.Mvc;
+using WordWizApp.Helpers;
 using WordWizApp.Models;
 
 namespace WordWizApp.Controllers
 {
+    [Authorize(Roles = "Admin, Teacher")]
     public class StudentController : Controller
     {
         private ApplicationDbContext db = new ApplicationDbContext();
-
+        
         // GET: Student
         public ActionResult Index()
         {
-            var students = db.Students.Include(s => s.User);
+            var currentUserId = User.Identity.GetUserId();
+            bool isAdmin = User.IsInRole("Admin");
+            IQueryable<Student> students = db.Students.Where(s => s.UserId == currentUserId || isAdmin);
             return View(students.ToList());
         }
 
@@ -48,14 +54,12 @@ namespace WordWizApp.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Create([Bind(Include = "Id,FirstName,LastName,CreatedDate,UserId")] Student student)
+        public ActionResult Create(Student student)
         {
             if (ModelState.IsValid)
-            {
-                // hardcode user for now
-                student.User = db.Users.Find(2); // john.smith
-                student.UserId = student.User.Id; 
-
+            {         
+                student.UserName = User.Identity.GetUserName();
+                student.UserId = User.Identity.GetUserId();
 
                 student.CreatedDate = DateTime.Now;
                 db.Students.Add(student);
@@ -88,7 +92,7 @@ namespace WordWizApp.Controllers
         // more details see https://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit([Bind(Include = "Id,FirstName,LastName,CreatedDate,UserId")] Student student)
+        public ActionResult Edit(Student student)
         {
             if (ModelState.IsValid)
             {

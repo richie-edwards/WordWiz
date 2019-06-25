@@ -1,16 +1,20 @@
-﻿using System;
+﻿using Microsoft.AspNet.Identity;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Web;
 using System.Web.Mvc;
+using WordWizApp.Helpers;
 using WordWizApp.Models;
 
 namespace WordWizApp.Controllers
 {
+    [Authorize]
     public class WordController : Controller
     {
         private ApplicationDbContext db;
+        WordHelper wh = new WordHelper();
 
 
         public WordController()
@@ -22,7 +26,9 @@ namespace WordWizApp.Controllers
         // GET: Word
         public ActionResult Index()
         {
-            return View(db.Words.ToList());
+            var myWords = wh.GetMyWords(db);
+
+            return View(myWords.ToList());
         }
 
         public ActionResult Create()
@@ -35,11 +41,11 @@ namespace WordWizApp.Controllers
         public ActionResult Create(Word word)
         {
             if (ModelState.IsValid)
-            {
-                word.Student = db.Students.Where(s => s.LastName == "One").FirstOrDefault();
-                word.StudentId = word.Student.Id;
+            {                
+                word.UserId = User.Identity.GetUserId();
                 word.CreatedDate = DateTime.Now;
                 word.IsDone = false;
+                
 
                 db.Words.Add(word);
                 db.SaveChanges();
@@ -49,6 +55,24 @@ namespace WordWizApp.Controllers
             return View();
         }
 
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult Delete(Word word)
+        {
+            if (ModelState.IsValid)
+            {
+                word.UserId = User.Identity.GetUserId();
+                word.CreatedDate = DateTime.Now;
+                word.IsDone = false;
+
+
+                db.Words.Add(word);
+                db.SaveChanges();
+
+                return RedirectToAction("Index");
+            }
+            return View();
+        }
 
         public ActionResult Sentences(int? id)
         {

@@ -10,11 +10,11 @@ namespace WordWizApp.Models
     // You can add profile data for the user by adding more properties to your ApplicationUser class, please visit https://go.microsoft.com/fwlink/?LinkID=317594 to learn more.
     public class ApplicationUser : IdentityUser
     {
-        public string FirstName { get; set; }
-        public string LastName { get; set; }
-        public string Phone { get; set; }
-        public DateTime BirthDate { get; set; }
-        public bool Active { get; set; }
+        //public string FirstName { get; set; }
+        //public string LastName { get; set; }
+        //public string Phone { get; set; }
+        //public DateTime BirthDate { get; set; }
+        //public bool Active { get; set; }
         
 
         public async Task<ClaimsIdentity> GenerateUserIdentityAsync(UserManager<ApplicationUser> manager)
@@ -30,9 +30,7 @@ namespace WordWizApp.Models
     {
         public DbSet<Word> Words { get; set; }
         public DbSet<Student> Students { get; set; }
-        public DbSet<Sentence> Sentences { get; set; }
-        public DbSet<User> Users { get; set; }
-        public DbSet<Role> Roles { get; set; }
+        public DbSet<Sentence> Sentences { get; set; }          
 
 
 

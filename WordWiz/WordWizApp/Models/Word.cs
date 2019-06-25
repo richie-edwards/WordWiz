@@ -24,7 +24,7 @@ namespace WordWizApp.Models
 
         public bool IsDone { get; set; }
 
-        public int StudentId { get; set; }
+        public string UserId { get; set; }
 
 
         public virtual Student Student { get; set; }

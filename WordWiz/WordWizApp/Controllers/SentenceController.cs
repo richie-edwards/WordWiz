@@ -10,6 +10,7 @@ using WordWizApp.Models;
 
 namespace WordWizApp.Controllers
 {
+    [Authorize]
     public class SentenceController : Controller
     {
         private ApplicationDbContext db;
@@ -84,6 +85,33 @@ namespace WordWizApp.Controllers
                 return RedirectToAction("Sentences", "Word", new RouteValueDictionary(new { word.Id }));
             }            
             return View(sentence);
+        }
+
+        // GET: Sentence/Delete/5
+        public ActionResult Delete(int? id)
+        {
+            if (id == null)
+            {
+                return new HttpStatusCodeResult(HttpStatusCode.BadRequest);
+            }
+            Sentence sentence = db.Sentences.Find(id);
+            if (sentence == null)
+            {
+                return HttpNotFound();
+            }
+            return View(sentence);
+        }
+
+
+        // POST: Sentence/Delete/5
+        [HttpPost, ActionName("Delete")]
+        [ValidateAntiForgeryToken]
+        public ActionResult Delete(int id)
+        {
+            Sentence sentence = db.Sentences.Find(id);
+            db.Sentences.Remove(sentence);
+            db.SaveChanges();
+            return RedirectToAction("Index", "Word");
         }
 
     }

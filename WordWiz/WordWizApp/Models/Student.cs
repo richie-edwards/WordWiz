@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using WordWizApp.Models;
 
 namespace WordWizApp.Models
 {
@@ -23,9 +24,9 @@ namespace WordWizApp.Models
         [Display(Name = "Name")]
         public string FullName => FirstName + " " + LastName;
 
-        public int UserId { get; set; }
+        public virtual string UserId { get; set; }
 
-        public virtual User User { get; set; }
+        public virtual string UserName  { get; set; }
 
         public virtual ICollection<Word> Words { get; set; }
 
